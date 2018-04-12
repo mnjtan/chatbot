@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -19,28 +20,27 @@ namespace ChatBotLibrary.Library
         private string format = "json";
 
         
-        //request gameSchedule
+        //request Game Schedules
         public List<GameViewModel> RequestGameSchedule(string season, string content, string options)
         {
             List<GameViewModel> games = new List<GameViewModel>();
 
             JObject data = Request(season, content, options).GetAwaiter().GetResult();
 
-            var fullGameSchedule = (JObject)data.Properties().First().Value;
+            var gameSchedule = (JObject)data.Properties().First().Value;
 
-            if(fullGameSchedule.Properties().Count() < 2)
+            //if game schedule is empty, return empty list
+            if(gameSchedule.Properties().Count() < 2)
             {
                 return games;
             }
 
-            var gameEntryProperty = fullGameSchedule.Properties().ElementAt(1);
+            var gameEntryProperty = gameSchedule.Properties().ElementAt(1);
             JArray list = (JArray)gameEntryProperty.Value;
 
             //deserialize JArray to list of c# objects
             var gameList = JsonConvert.DeserializeObject<List<GameViewModel>>(list.ToString());
-
-            
-
+                        
             foreach (var game in gameList)
             {
                 games.Add(game);
@@ -48,6 +48,61 @@ namespace ChatBotLibrary.Library
             return games;
         }
 
+        //request game scores for a specific day
+        public List<ScoreViewModel> RequestGameScore(string season, string content, string options)
+        {
+            List<ScoreViewModel> scores = new List<ScoreViewModel>();
+
+            JObject data = Request(season, content, options).GetAwaiter().GetResult();
+
+            var gameScores = (JObject)data.Properties().First().Value;
+
+            //if game schedule is empty, return empty list
+            if (gameScores.Properties().Count() < 2)
+            {
+                return scores;
+            }
+
+            var scoreEntry = gameScores.Properties().ElementAt(1);
+            JArray list = (JArray)scoreEntry.Value;
+
+            //deserialize JArray to list of c# objects
+            var gameScoreList = JsonConvert.DeserializeObject<List<ScoreViewModel>>(list.ToString());
+
+            foreach (var score in gameScoreList)
+            {
+                scores.Add(score);
+            }
+            return scores;
+        }
+
+        public List<ScoreViewModel> RequestTeamScores(string season,string content, string teams)
+        {
+            List<ScoreViewModel> teamScoreList = new List<ScoreViewModel>();
+
+            
+            //get which days given team played a game, save dates into a list
+            var gamesList = RequestGameSchedule(season, "full_game_schedule", teams);
+            
+            var dateList = new List<string>();
+
+            foreach (var game in gamesList)
+            {
+                //removing '-' from date string so that it conforms with api's required format YYYYMMDD
+                var temp = Regex.Replace(game.Date,"[^0-9]", "");
+                dateList.Add(temp);
+            }
+
+            //return dateList;
+
+            //use list of dates to get score of games, save each score into list result
+            foreach (var date in dateList)
+            {
+                var scoreList = RequestGameScore(season, "scoreboard", $"fordate={date}&{teams}");
+                teamScoreList.AddRange(scoreList);
+            }
+            return teamScoreList;
+        }
 
         //Make request to MySportsFeed API for season and content type
         private async Task<JObject> Request(string season, string contentType, string options)
@@ -61,7 +116,6 @@ namespace ChatBotLibrary.Library
 
             string content = string.Empty;
 
-            //WebResponse response = request.GetResponse();
             using (WebResponse response = await request.GetResponseAsync())
             {
                 using (Stream stream = response.GetResponseStream())
@@ -74,19 +128,8 @@ namespace ChatBotLibrary.Library
             }
 
             var data = JObject.Parse(content);
-
             return data;
         }
-
-
-        public string RequestGameSchedule2(string season, string content, string options)
-        {
-            JObject data = Request(season, content, options).GetAwaiter().GetResult();
-
-            return data.ToString();
-        }
-
-
-
-        }
+        
     }
+}

@@ -14,6 +14,8 @@ namespace ChatBotLibrary.Service.Controllers
     [Route("api/Schedule")]
     public class ScheduleController : Controller
     {
+        private SportsDataReader sportData = new SportsDataReader();
+        
         // GET: api/Schedule ?season=""team=""
         [HttpGet]
         //defaults to current season (2017-playoff for now)
@@ -26,7 +28,6 @@ namespace ChatBotLibrary.Service.Controllers
                 options += "team=" + teams;
             }
 
-            var sportData = new SportsDataReader();
             return await Task.Run(() => sportData.RequestGameSchedule(season, "full_game_schedule",options));
         }
                 
@@ -43,26 +44,7 @@ namespace ChatBotLibrary.Service.Controllers
                 options += "team=" + teams;
             }
 
-            var sportData = new SportsDataReader();
             return await Task.Run(() => sportData.RequestGameSchedule(season, "daily_game_schedule",options));
-        }
-
-
-        // GET: api/Schedule/date(YYYYMMDD) ?season=""
-        [HttpGet("{date}/{time}")]
-        //gets daily_game_schedule by season
-        public async Task<string> GetAsync(string date, string time, string season = "2017-playoff", string teams = "")
-        {
-            string options = "";
-            options += "fordate=" + date + "&";
-
-            if (teams != "")
-            {
-                options += "team=" + teams;
-            }
-
-            var sportData = new SportsDataReader();
-            return await Task.Run(() => sportData.RequestGameSchedule2(season, "daily_game_schedule", options));
         }
 
     }
