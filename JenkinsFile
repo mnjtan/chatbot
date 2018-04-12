@@ -1,0 +1,94 @@
+node {
+    stage ('IMPORT') {
+        git url:'https://github.com/mnjtan/chatbot.git', branch:'master', credentialId:'github-token'
+    }
+    
+    //Client
+    stage ('BUILD Client') {
+        dir ('ChatBot/') {
+            bat 'dotnet build'
+        }
+    }
+
+    stage ('ANALYZE Client') {
+        dir ('ChatBot/') {
+            bat 'dotnet c:\\tools\\sonarqube\\sonarscanner.msbuild.dll begin /k:chatbot'
+            bat 'dotnet build'
+            bat 'dotnet c:\\tools\\sonarqube\\sonarscanner.msbuild.dll end'
+        }
+    }
+
+    stage ('PACKAGE Client') {
+        dir ('ChatBot/') {
+            bat 'dotnet publish --output ../Package'
+        }
+    }
+
+    stage ('DEPLOY Client') {
+        dir ('ChatBot/') {
+            bat 'msdeploy -verb:sync -source:iisApp="c:\\Program Files (x86)\\Jenkins\\workspace\\chatbot\\ChatBot\\Package" -dest:iisApp="Default Web Site/ChatBot" -enableRule:AppOffline'
+        }
+    }
+
+    //Data
+    stage ('BUILD Data') {
+        dir ('ChatBotData/') {
+            bat 'dotnet build'
+        }
+    }
+
+    stage ('ANALYZE Data') {
+        dir ('ChatBotData/') {
+            bat 'dotnet c:\\tools\\sonarqube\\sonarscanner.msbuild.dll begin /k:chatbot-data'
+            bat 'dotnet build'
+            bat 'dotnet c:\\tools\\sonarqube\\sonarscanner.msbuild.dll end'
+        }
+    }
+
+    stage ('PACKAGE Data') {
+        dir ('ChatBotData/') {
+            bat 'dotnet publish --output ../Package'
+        }
+    }
+
+    stage ('DEPLOY Data') {
+        dir ('ChatBotData/') {
+            bat 'msdeploy -verb:sync -source:iisApp="c:\\Program Files (x86)\\Jenkins\\workspace\\chatbot\\ChatBotData\\Package" -dest:iisApp="Default Web Site/ChatBotData" -enableRule:AppOffline'
+        }
+    }
+
+    //Library
+    stage ('BUILD Library') {
+        dir ('ChatBotLibrary/') {
+            bat 'dotnet build'
+        }
+    }
+
+    stage ('ANALYZE Library') {
+        dir ('ChatBotLibrary/') {
+            bat 'dotnet c:\\tools\\sonarqube\\sonarscanner.msbuild.dll begin /k:chatbot-library'
+            bat 'dotnet build'
+            bat 'dotnet c:\\tools\\sonarqube\\sonarscanner.msbuild.dll end'
+        }
+    }
+
+    stage ('PACKAGE Library') {
+        dir ('ChatBotLibrary/') {
+            bat 'dotnet publish --output ../Package'
+        }
+    }
+
+    stage ('DEPLOY Library') {
+        dir ('ChatBotLibrary/') {
+            bat 'msdeploy -verb:sync -source:iisApp="c:\\Program Files (x86)\\Jenkins\\workspace\\chatbot\\ChatBotLibrary\\Package" -dest:iisApp="Default Web Site/ChatBotLibrary" -enableRule:AppOffline'
+        }
+    }
+
+}
+
+   
+    // stage ('TEST') {
+    //     dir ('ChatBot/ChatBot.Tests/') {
+    //         bat 'dotnet xunit -fxversion 2.0.5 -xml ../Tests/testResult.xml' 
+    //     }
+    // }
