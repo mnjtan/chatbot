@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChatBotData.Service.Controllers
 {
+    [EnableCors("allowAll")]
     [Produces("application/json")]
     [Route("api/values")]
     public class ValuesController : Controller
