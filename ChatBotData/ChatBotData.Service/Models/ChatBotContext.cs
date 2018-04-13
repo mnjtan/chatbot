@@ -13,7 +13,7 @@ namespace ChatBotData.Service.Models
         private IConfiguration Configuration;
         private string Connection;
 
-        DbSet<User> User { get; set; }
+        public DbSet<User> User { get; set; }
 
         public ChatBotContext()
         {
