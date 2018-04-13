@@ -16,19 +16,28 @@ namespace ChatBotData.Service.Controllers
     {
         private DataReader dataReader = new DataReader();
 
-        // GET api/data
+        // GET: api/values
         [HttpGet]
-        public async Task<IEnumerable<User>> GetAllUsers()
+        public IEnumerable<string> Get()
         {
-            return await Task.Run(() => dataReader.ReadUsers());
+            return new string[] { "value1", "value2" };
         }
 
-        // GET api/data/{email}
-        [HttpGet("{email}", Name = "GetUser")]
-        public async Task<User> GetUser(string email)
-        {
-            return await Task.Run(() => dataReader.FindUser(email));
-        }
+        //// GET api/data
+        //[HttpGet]
+        //public async Task<IEnumerable<User>> GetAllUsers()
+        //{
+        //    return await Task.Run(() => dataReader.ReadUsers());
+        //}
+
+
+
+        //// GET api/data/{email}
+        //[HttpGet("{email}", Name = "GetUser")]
+        //public async Task<User> GetUser(string email)
+        //{
+        //    return await Task.Run(() => dataReader.FindUser(email));
+        //}
 
         // POST api/data
         [HttpPost] //Create
