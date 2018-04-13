@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20180413001520_MyFirstMigration.cs" />
+    <Compile Remove="Migrations\20180413001520_MyFirstMigration.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="appsettings.dev.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -17,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChatBotData.Library\ChatBotData.Library.csproj" />
+    <None Include="appsettings.dev.json" />
   </ItemGroup>
 
 </Project>
