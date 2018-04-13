@@ -23,6 +23,13 @@ namespace ChatBotData.Service.Models
             return user;
         }
 
+        //looks up user by email, if not found returns null
+        public User FindUserById(int id)
+        {
+            var user = db.User.Find(id);
+            return user;
+        }
+
         public bool InsertUser(User user)
         {
             db.User.Add(user);
