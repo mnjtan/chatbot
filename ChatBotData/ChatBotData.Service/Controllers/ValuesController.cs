@@ -13,8 +13,6 @@ namespace ChatBotData.Service.Controllers
     [Route("api/values")]
     public class ValuesController : Controller
     {
-        private DataReader dataReader { get; set; } = new DataReader();
-
         // GET: api/values
         [HttpGet]
         public IEnumerable<string> Get()

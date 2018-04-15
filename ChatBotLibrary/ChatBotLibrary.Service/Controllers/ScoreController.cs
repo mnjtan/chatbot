@@ -18,7 +18,7 @@ namespace ChatBotLibrary.Service.Controllers
 
         // GET: api/Score/{date} ?season={season} & teams={team1,team2,...}
         [HttpGet("{date}")]
-        //gets all game scores for given date
+        //gets all game scores for given date (YYYYMMDD)
         public async Task<IEnumerable<ScoreViewModel>> GetAsync(string date, string season = "2017-playoff", string teams = "")
         {
             string options = "";
