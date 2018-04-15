@@ -11,30 +11,28 @@ namespace ChatBotLibrary.Service.Controllers
 {
     [EnableCors("allowAll")]
     [Produces("application/json")]
-    [Route("api/Schedule")]
+    [Route("api/schedule")]
     public class ScheduleController : Controller
     {
         private SportsDataReader sportData = new SportsDataReader();
-        
-        // GET: api/Schedule ?season=""team=""
-        [HttpGet]
-        //defaults to current season (2017-playoff for now)
-        public async Task<IEnumerable<GameViewModel>> GetAsync(string season = "2017-playoff", string teams = "")
+
+        //for all methods, season will default to current season (latest, 2018-playoff)
+
+        [HttpGet("team/{team}")] // GET: api/schedule/team/{team} ?season=""
+        //will return the next game for the specified team
+        public async Task<GameViewModel> GetAsync(string team, string season = "latest")
         {
-            string options = "";
+            string options = "team=" + team;
 
-            if(teams != "")
-            {
-                options += "team=" + teams;
-            }
+            return await Task.Run(() => sportData.RequestNextGame(season, "full_game_schedule",options));
+            //return await Task.Run(() => sportData.RequestGameSchedule(season, "full_game_schedule", options));
 
-            return await Task.Run(() => sportData.RequestGameSchedule(season, "full_game_schedule",options));
         }
-                
-        // GET: api/Schedule/date(YYYYMMDD) ?season=""
-        [HttpGet("{date}")]
-        //gets daily_game_schedule by season
-        public async Task<IEnumerable<GameViewModel>> GetAsync(string date, string season = "2017-playoff", string teams = "")
+
+
+        [HttpGet("date/{date}")] // GET: api/schedule/date/{date}(YYYYMMDD) ?season=""&teams=""
+        //gets all game schedules for specified date
+        public async Task<IEnumerable<GameViewModel>> GetAsync(string date, string season = "latest", string teams = "")
         {
             string options = "";
             options += "fordate=" + date + "&";

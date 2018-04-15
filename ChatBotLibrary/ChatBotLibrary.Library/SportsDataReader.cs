@@ -19,7 +19,28 @@ namespace ChatBotLibrary.Library
         //private string baseURL="https://api.mysportsfeeds.com/v1.2/pull/nba/{season-name}/{request}.json?{options}"
         private string format = "json";
 
-        
+        //returns the next game for a specified team
+        public GameViewModel RequestNextGame(string season, string content, string team)
+        {
+            //get all games for specified team
+            var gamesList = RequestGameSchedule(season, content, team);
+
+            //for test puproses
+            var today = DateTime.Today;
+            today = DateTime.Parse("2017-04-21");
+
+            //only get the teams next game
+            foreach(var game in gamesList)
+            {
+                var gameDate = DateTime.Parse(game.Date);
+                if(gameDate >= DateTime.Today)
+                {
+                    return game;
+                }
+            }
+            return null;
+        }
+
         //request Game Schedules
         public List<GameViewModel> RequestGameSchedule(string season, string content, string options)
         {
@@ -107,7 +128,7 @@ namespace ChatBotLibrary.Library
         //Make request to MySportsFeed API for season and content type
         private async Task<JObject> Request(string season, string contentType, string options)
         {
-            string url = baseURL + season + "/" + contentType + "." + format +"?"+ options; //{pull-url};
+            string url = baseURL + season + "/" + contentType + "." + format +"?"+ options;
             var credentials = Encoding.Default.GetBytes(username + ":" + password);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
