@@ -29,6 +29,12 @@ namespace ChatBot.Client.Controllers
             return View();
         }
 
+        public IActionResult Bot()
+        {
+            ViewData["Message"] = "I can help you with information about the NBA.";
+            return View();
+        }
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

@@ -14,6 +14,5 @@ namespace ChatBotLibrary.Library
         public string IsCompleted { get; set; }
         //public QuarterSummary QuarterSummary { get; set; }
 
-
     }
 }
