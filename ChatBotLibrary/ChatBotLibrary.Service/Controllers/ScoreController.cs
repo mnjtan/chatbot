@@ -40,5 +40,16 @@ namespace ChatBotLibrary.Service.Controllers
             return await Task.Run(() => sportData.RequestLastGameScore(season, "scoreboard", options));
         }
 
+        [HttpGet("team/{team1}/{team2}")] // GET: api/score/team/{team} ?season={season}
+        //get game score for last game between team1 and team2
+        public async Task<ScoreViewModel> GetScoreAsync(string team1, string team2, string season = "latest")
+        {
+            string options = "team=" + team1;
+
+
+            return await Task.Run(() => sportData.RequestScore(season, "scoreboard", team1, team2));
+        }
+
+
     }
 }

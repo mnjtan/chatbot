@@ -41,6 +41,7 @@ namespace ChatBotLibrary.Library
             return null;
         }
 
+        //returns score for last game played by the specified team
         public ScoreViewModel RequestLastGameScore(string season, string content, string team)
         {
             //get all games for specified team
@@ -71,7 +72,39 @@ namespace ChatBotLibrary.Library
             return null;
         }
 
-        //request Game Schedules
+        //returns score for last game between team1 and team2
+        public ScoreViewModel RequestScore(string season, string content, string team1, string team2)
+        {
+            //get list of games played by team1
+            var gamesList = RequestGameSchedule(season, "full_game_schedule", $"team={team1}");
+
+            //reverse list to iterate from latest to oldest date
+            gamesList.Reverse();
+
+            //find last game where team1 played against team2
+            foreach(var game in gamesList)
+            {
+                var homeTeam = game.HomeTeam.Abbreviation;
+                var awayTeam = game.AwayTeam.Abbreviation;
+                var gameDate = DateTime.Parse(game.Date);
+
+                //if played against team2 and game has passed already
+                if ((homeTeam == team2.ToUpper() || awayTeam == team2.ToUpper()) && gameDate < DateTime.Today)
+                {
+                    //use date of game to find the score
+                    //removing '-' from date string so that it conforms with api's required format YYYYMMDD
+                    var date = Regex.Replace(game.Date, "[^0-9]", "");
+
+                    string options = $"fordate={date}&team={team1}";
+
+                    var scores = RequestGameScore(season, content, options);
+                    return scores.FirstOrDefault();
+                }
+            }
+            return null;
+        }
+
+        //request Game Schedules (options for team or date)
         public List<GameViewModel> RequestGameSchedule(string season, string content, string options)
         {
             List<GameViewModel> games = new List<GameViewModel>();
