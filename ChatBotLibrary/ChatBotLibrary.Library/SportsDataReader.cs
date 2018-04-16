@@ -20,7 +20,7 @@ namespace ChatBotLibrary.Library
         private string format = "json";
 
         //returns the next game for a specified team
-        public GameViewModel RequestNextGame(string season, string content, string team)
+        public GameViewModel RequestNextGameSchedule(string season, string content, string team)
         {
             //get all games for specified team
             var gamesList = RequestGameSchedule(season, content, team);
@@ -36,6 +36,36 @@ namespace ChatBotLibrary.Library
                 if(gameDate >= DateTime.Today)
                 {
                     return game;
+                }
+            }
+            return null;
+        }
+
+        public ScoreViewModel RequestLastGameScore(string season, string content, string team)
+        {
+            //get all games for specified team
+            var gamesList = RequestGameSchedule(season, "full_game_schedule", team);
+
+            //for test purposes
+            var today = DateTime.Today;
+            today = DateTime.Parse("2017-04-21");
+
+            //reverse list to iterate from latest to oldest date
+            gamesList.Reverse();
+
+            //get the teams last played game
+            foreach (var game in gamesList)
+            {
+                var gameDate = DateTime.Parse(game.Date);
+                if (gameDate < DateTime.Today)
+                {
+                    //removing '-' from date string so that it conforms with api's required format YYYYMMDD
+                    var date = Regex.Replace(game.Date, "[^0-9]", "");
+
+                    string options = "fordate=" + date + "&";
+
+                    var scores = RequestGameScore(season, content, options+team);
+                    return scores.FirstOrDefault();
                 }
             }
             return null;
@@ -97,6 +127,7 @@ namespace ChatBotLibrary.Library
             return scores;
         }
 
+        //requests all game scores for a specified team
         public List<ScoreViewModel> RequestTeamScores(string season,string content, string teams)
         {
             List<ScoreViewModel> teamScoreList = new List<ScoreViewModel>();

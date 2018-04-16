@@ -24,7 +24,7 @@ namespace ChatBotLibrary.Service.Controllers
         {
             string options = "team=" + team;
 
-            return await Task.Run(() => sportData.RequestNextGame(season, "full_game_schedule",options));
+            return await Task.Run(() => sportData.RequestNextGameSchedule(season, "full_game_schedule",options));
             //return await Task.Run(() => sportData.RequestGameSchedule(season, "full_game_schedule", options));
 
         }
