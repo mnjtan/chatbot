@@ -14,23 +14,23 @@ namespace ChatBotLibrary.Service.Controllers
     {
         private SportsDataReader sportData = new SportsDataReader();
 
-        [HttpGet] // GET: api/Standings ?season="" & teamstats="," & team=""
+        [HttpGet] // GET: api/standings ?season="" & teamstats="," & team=""
         //returns standings of all teams seperated by Conference
         public async Task<IEnumerable<ConferenceModel>> GetAsync(string season = "2017-2018-regular", string teamstats = "W,L")
         {
-            var options = "";
-
-            //for test purposes
-            options += "teamstats=" + teamstats;
+            var options = "teamstats=" + teamstats;
 
             return await Task.Run(() => sportData.RequestStandings(season, "conference_team_standings", options)); 
         }
 
-        // GET: api/Standings/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        // GET: api/standings/{team}
+        [HttpGet("{team}")]
+        //returns standing for specified team
+        public async Task<TeamStatsModel> Get(string team, string season = "2017-2018-regular", string teamstats = "W,L")
         {
-            return "value";
+            var options = "teamstats=" + teamstats;
+            options += "&team=" + team;
+            return await Task.Run(() => sportData.RequestTeamStanding(season, "conference_team_standings", options));
         }
      
     }

@@ -189,6 +189,21 @@ namespace ChatBotLibrary.Library
             return teamScoreList;
         }
 
+        //games played, win, loss, win%, pts/game, fg% 
+        //request standing for specified team
+        public TeamStatsModel RequestTeamStanding(string season, string content, string teams)
+        {
+            var conferenceList = RequestStandings(season, content, teams);
+            
+            //if theres a team in first conference, return team
+            if (conferenceList.First().TeamEntry != null)
+            {
+                return conferenceList.First().TeamEntry.FirstOrDefault();
+            }
+            return conferenceList.Last().TeamEntry.FirstOrDefault();
+            
+        }
+
         //request team standings seperated by division (options for team or date)
         public List<ConferenceModel> RequestStandings(string season, string content, string options)
         {
@@ -218,7 +233,7 @@ namespace ChatBotLibrary.Library
             }
             return conferenceStandings;
         }
-        
+
         //Make request to MySportsFeed API for season and content type
         private async Task<JObject> Request(string season, string contentType, string options)
         {

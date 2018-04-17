@@ -6,7 +6,7 @@ namespace ChatBotLibrary.Library
 {
     public class ConferenceModel
     {
-        public string @Name { get; set; }
+        public string Name { get; set; }
         public List<TeamStatsModel> TeamEntry { get; set; }
 
         public override string ToString()
