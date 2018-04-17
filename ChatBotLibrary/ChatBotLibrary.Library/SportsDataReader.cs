@@ -20,7 +20,7 @@ namespace ChatBotLibrary.Library
         private string format = "json";
 
         //returns the next game for a specified team
-        public GameViewModel RequestNextGameSchedule(string season, string content, string team)
+        public GameModel RequestNextGameSchedule(string season, string content, string team)
         {
             //get all games for specified team
             var gamesList = RequestGameSchedule(season, content, team);
@@ -42,7 +42,7 @@ namespace ChatBotLibrary.Library
         }
 
         //returns score for last game played by the specified team
-        public ScoreViewModel RequestLastGameScore(string season, string content, string team)
+        public ScoreModel RequestLastGameScore(string season, string content, string team)
         {
             //get all games for specified team
             var gamesList = RequestGameSchedule(season, "full_game_schedule", team);
@@ -73,7 +73,7 @@ namespace ChatBotLibrary.Library
         }
 
         //returns score for last game between team1 and team2
-        public ScoreViewModel RequestScore(string season, string content, string team1, string team2)
+        public ScoreModel RequestScore(string season, string content, string team1, string team2)
         {
             //get list of games played by team1
             var gamesList = RequestGameSchedule(season, "full_game_schedule", $"team={team1}");
@@ -105,9 +105,9 @@ namespace ChatBotLibrary.Library
         }
 
         //request Game Schedules (options for team or date)
-        public List<GameViewModel> RequestGameSchedule(string season, string content, string options)
+        public List<GameModel> RequestGameSchedule(string season, string content, string options)
         {
-            List<GameViewModel> games = new List<GameViewModel>();
+            List<GameModel> games = new List<GameModel>();
 
             JObject data = Request(season, content, options).GetAwaiter().GetResult();
 
@@ -123,7 +123,7 @@ namespace ChatBotLibrary.Library
             JArray list = (JArray)gameEntryProperty.Value;
 
             //deserialize JArray to list of c# objects
-            var gameList = JsonConvert.DeserializeObject<List<GameViewModel>>(list.ToString());
+            var gameList = JsonConvert.DeserializeObject<List<GameModel>>(list.ToString());
                         
             foreach (var game in gameList)
             {
@@ -133,9 +133,9 @@ namespace ChatBotLibrary.Library
         }
 
         //request game scores for a specific day
-        public List<ScoreViewModel> RequestGameScore(string season, string content, string options)
+        public List<ScoreModel> RequestGameScore(string season, string content, string options)
         {
-            List<ScoreViewModel> scores = new List<ScoreViewModel>();
+            List<ScoreModel> scores = new List<ScoreModel>();
 
             JObject data = Request(season, content, options).GetAwaiter().GetResult();
 
@@ -151,7 +151,7 @@ namespace ChatBotLibrary.Library
             JArray list = (JArray)scoreEntry.Value;
 
             //deserialize JArray to list of c# objects
-            var gameScoreList = JsonConvert.DeserializeObject<List<ScoreViewModel>>(list.ToString());
+            var gameScoreList = JsonConvert.DeserializeObject<List<ScoreModel>>(list.ToString());
 
             foreach (var score in gameScoreList)
             {
@@ -161,9 +161,9 @@ namespace ChatBotLibrary.Library
         }
 
         //requests all game scores for a specified team
-        public List<ScoreViewModel> RequestTeamScores(string season,string content, string teams)
+        public List<ScoreModel> RequestTeamScores(string season,string content, string teams)
         {
-            List<ScoreViewModel> teamScoreList = new List<ScoreViewModel>();
+            List<ScoreModel> teamScoreList = new List<ScoreModel>();
 
             
             //get which days given team played a game, save dates into a list
@@ -189,6 +189,36 @@ namespace ChatBotLibrary.Library
             return teamScoreList;
         }
 
+        //request team standings seperated by division (options for team or date)
+        public List<ConferenceModel> RequestStandings(string season, string content, string options)
+        {
+            List<ConferenceModel> conferenceStandings = new List<ConferenceModel>();
+
+            JObject data = Request(season, content, options).GetAwaiter().GetResult();
+
+            var standings = (JObject)data.Properties().First().Value;
+
+            //if game schedule is empty, return empty list
+            if (standings.Properties().Count() < 2)
+            {
+                return conferenceStandings;
+            }
+
+            var conferenceProperty = standings.Properties().ElementAt(1);
+            JArray list = (JArray)conferenceProperty.Value;
+            var str = list.ToString();
+            str = Regex.Replace(str, "[#@]", "");
+
+            //deserialize JArray to list of c# objects
+            var conferenceList = JsonConvert.DeserializeObject<List<ConferenceModel>>(str);
+
+            foreach (var conference in conferenceList)
+            {
+                conferenceStandings.Add(conference);
+            }
+            return conferenceStandings;
+        }
+        
         //Make request to MySportsFeed API for season and content type
         private async Task<JObject> Request(string season, string contentType, string options)
         {
@@ -215,6 +245,6 @@ namespace ChatBotLibrary.Library
             var data = JObject.Parse(content);
             return data;
         }
-        
+
     }
 }

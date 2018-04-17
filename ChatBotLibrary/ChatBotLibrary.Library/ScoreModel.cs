@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ChatBotLibrary.Library
 {
-    public class ScoreViewModel
+    public class ScoreModel
     {
-        public GameViewModel game { get; set; }
+        public GameModel game { get; set; }
         public int AwayScore { get; set; }
         public int HomeScore { get; set; }
         public string IsUnplayed { get; set; }

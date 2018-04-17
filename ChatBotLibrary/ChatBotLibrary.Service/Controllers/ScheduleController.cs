@@ -20,7 +20,7 @@ namespace ChatBotLibrary.Service.Controllers
 
         [HttpGet("team/{team}")] // GET: api/schedule/team/{team} ?season=""
         //will return the next game for the specified team
-        public async Task<GameViewModel> GetAsync(string team, string season = "latest")
+        public async Task<GameModel> GetAsync(string team, string season = "latest")
         {
             string options = "team=" + team;
 
@@ -32,7 +32,7 @@ namespace ChatBotLibrary.Service.Controllers
 
         [HttpGet("date/{date}")] // GET: api/schedule/date/{date}(YYYYMMDD) ?season=""&teams=""
         //gets all game schedules for specified date
-        public async Task<IEnumerable<GameViewModel>> GetAsync(string date, string season = "latest", string teams = "")
+        public async Task<IEnumerable<GameModel>> GetAsync(string date, string season = "latest", string teams = "")
         {
             string options = "";
             options += "fordate=" + date + "&";

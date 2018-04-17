@@ -1,14 +1,14 @@
 ﻿namespace ChatBotLibrary.Library
 {
-    public class GameViewModel
+    public class GameModel
     {
         //public int Id { get; set; }
         //public string ScheduleStatus { get; set; }
         public string Date { get; set; }
         public string Time { get; set; }
         public string Location { get; set; }
-        public Team AwayTeam { get; set; }
-        public Team HomeTeam { get; set; }
+        public TeamModel AwayTeam { get; set; }
+        public TeamModel HomeTeam { get; set; }
 
         public override string ToString()
         {
