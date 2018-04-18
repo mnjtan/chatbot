@@ -189,11 +189,10 @@ namespace ChatBotLibrary.Library
             return teamScoreList;
         }
 
-        //games played, win, loss, win%, pts/game, fg% 
         //request standing for specified team
         public TeamStatsModel RequestTeamStanding(string season, string content, string teams)
         {
-            var conferenceList = RequestStandings(season, content, teams);
+            var conferenceList = RequestStandings(season, content,teams);
             
             //if theres a team in first conference, return team
             if (conferenceList.First().TeamEntry != null)

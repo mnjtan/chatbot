@@ -6,7 +6,9 @@
         public Details Wins { get; set; }
         public Details Losses { get; set; }
         public Details WinPct { get; set; }
-        public Details PlusMinus { get; set; } 
+        public Details FgPct { get; set; }
+        public Details PtsPerGame { get; set; }
+
 
 
         public override string ToString()

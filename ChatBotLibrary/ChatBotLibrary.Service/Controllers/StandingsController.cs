@@ -16,7 +16,7 @@ namespace ChatBotLibrary.Service.Controllers
 
         [HttpGet] // GET: api/standings ?season="" & teamstats="," & team=""
         //returns standings of all teams seperated by Conference
-        public async Task<IEnumerable<ConferenceModel>> GetAsync(string season = "2017-2018-regular", string teamstats = "W,L")
+        public async Task<IEnumerable<ConferenceModel>> GetAsync(string season = "2017-2018-regular", string teamstats = "W,L,WIN %,PTS/G,FG%")
         {
             var options = "teamstats=" + teamstats;
 
@@ -26,7 +26,7 @@ namespace ChatBotLibrary.Service.Controllers
         // GET: api/standings/{team}
         [HttpGet("{team}")]
         //returns standing for specified team
-        public async Task<TeamStatsModel> Get(string team, string season = "2017-2018-regular", string teamstats = "W,L")
+        public async Task<TeamStatsModel> Get(string team, string season = "2017-2018-regular", string teamstats = "W,L,WIN %,PTS/G,FG%")
         {
             var options = "teamstats=" + teamstats;
             options += "&team=" + team;
