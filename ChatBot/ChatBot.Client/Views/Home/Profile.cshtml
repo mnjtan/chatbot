@@ -1,0 +1,130 @@
+﻿@model PizzaStore.MVC.Models.Library.Customer
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+
+<div class="container-fluid">
+
+    <div class="row text-center">
+        <h1>Your Profile</h1>
+    </div>
+
+    <div>
+
+        <div class="row">
+            <div class="page-header row">
+                <div class="col-md-9">
+                    <h3>Personal Information</h3>
+                </div>
+                <div class="col-md-3">
+                    <a href="/Pizza/EditProfile" class=""> <h3>Edit Profile</h3> </a>
+                </div>
+            </div>
+            <div>
+                <h5> <span>First Name: </span> @Model.FirstName</h5>
+            </div>
+            <div>
+                <h5> <span>Last Name: </span> @Model.LastName</h5>
+            </div>
+            <div>
+                <h5> <span>Email Address: </span> @Model.Email</h5>
+            </div>
+            <div>
+                <h5> <span>Phone Number: </span> @Model.Phone</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="page-header row">
+                <div class="col-md-9">
+                    <h3>Address Information</h3>
+                </div>
+                <div class="col-md-3">
+                    <a href="/Pizza/AddAddress" class=""> <h3>Add Address</h3> </a>
+                </div>
+            </div>
+
+            @{ 
+                if (Model.Address.Count == 0)
+                {
+                    <div>
+                        <h5 class="text-center"> NO ADDRESSES SAVED </h5>
+                    </div>
+                }
+                for (var i = 0; i < Model.Address.Count; i++)
+                {
+                    var a = Model.Address[i];
+                    <div>
+                        <h4>Address #@(i + 1)</h4>
+                        <div class="container">
+                            <h5>@a.Street</h5>
+                            <h5>@(a.City + ", " + a.State + " " + a.Zipcode)</h5>
+                        </div>
+                    </div>
+                    <br />
+                }
+            }
+
+        </div>
+
+        @*<div class="row">
+            <div class="page-header">
+                <h4>Credit Card Information</h4>
+            </div>
+            <div>
+                <h5> <span>First Name: </span> @Model.FirstName</h5>
+            </div>
+            <div>
+                <h5> <span>Last Name: </span> @Model.LastName</h5>
+            </div>
+        </div>*@
+
+        <div class="row">
+            <div class="page-header">
+                <h3>Order History</h3>
+            </div>
+
+            @{ 
+                if (Model.OrderHistory.Count == 0)
+                {
+                    <div>
+                        <h5 class="text-center"> YOU HAVEN'T MADE ANY ORDERS YET </h5>
+                    </div>
+                }
+                for (var i = 0; i < Model.OrderHistory.Count; i++)
+                {
+                    <div>
+                        <h4> Order Date: @Model.OrderHistory[i].OrderTime </h4>
+                        <h4> Location: @Model.OrderHistory[i].Location.Address </h4>
+                    </div>
+                    <div class="container">
+                        @{ 
+                            <hr/>
+                            for (var j = 0; j < Model.OrderHistory[i].Cart.Count; j++)
+                            {
+                                var p = Model.OrderHistory[i].Cart[j];
+                                var toppings = p.ToppingString();
+                                var cheeses = p.CheeseString();
+                                <div>
+                                    <h5>@(p.Size + " " + p.Crust + " Pizza")</h5>
+                                    <h6>@(toppings + cheeses + p.Sauce)</h6>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <hr />
+                }
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+

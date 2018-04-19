@@ -22,6 +22,21 @@ namespace ChatBot.Client
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            //\\//\\  Setting up Session State  //\\//\\
+
+            // Adds a default in-memory implementation of IDistributedCache.
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing. [60s * 5min = 300s]
+                options.IdleTimeout = TimeSpan.FromSeconds(300);
+                options.Cookie.HttpOnly = true;
+            });
+
+            //\\//\\    End of Setup    //\\//\\
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +53,10 @@ namespace ChatBot.Client
             }
 
             app.UseStaticFiles();
+
+            //\\//\\  Setting up Session State  //\\//\\
+
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

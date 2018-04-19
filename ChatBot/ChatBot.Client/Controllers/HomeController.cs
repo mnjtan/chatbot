@@ -5,11 +5,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ChatBot.Client.Models;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace ChatBot.Client.Controllers
 {
     public class HomeController : Controller
     {
+        const string SessionKeyName = "_Name";
+        const string SessionKeyEmail = "_Email";
+
         public IActionResult Index()
         {
             return View();
@@ -22,16 +27,20 @@ namespace ChatBot.Client.Controllers
             return View();
         }
 
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
         public IActionResult Bot()
         {
-            ViewData["Message"] = "I can help you with information about the NBA.";
+            //if signed in
+            if (HttpContext.Session.GetString(SessionKeyEmail) != null)
+            {
+                var name = HttpContext.Session.GetString(SessionKeyName);
+                ViewBag.LoggedIn = "true";
+                ViewBag.Message = "Welcome " + name;
+            }
+            else
+            {
+                ViewBag.Message = "Welcome Guest";
+            }
+
             return View();
         }
 
@@ -39,5 +48,94 @@ namespace ChatBot.Client.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [HttpGet]
+        public IActionResult SignIn()
+        {
+            return View(new SignInViewModel());
+        }
+
+        [HttpPost]
+        public IActionResult SignIn(SignInViewModel model)
+        {
+            //attempting to find customer in database
+            User user = DataReader.SignIn(model.Email).GetAwaiter().GetResult();
+
+            //if not found, show error message
+            if (user == null)
+            {
+                ViewBag.Error = "We do not recognize your email and/or password. Please try again or Register for an account.";
+                return View(model);
+            }
+
+            //if found, save to session and redirect to UserHome
+            HttpContext.Session.SetString(SessionKeyName, user.Name);
+            HttpContext.Session.SetString(SessionKeyEmail, user.Email);
+
+            return RedirectToAction("Bot");
+
+        }
+
+        public IActionResult SignOut()
+        {
+            HttpContext.Session.Clear();
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View(new User());
+        }
+
+        [HttpPost]
+        public IActionResult Register(User model)
+        {
+            //try to register customer
+            if (false)//!DbRegisterCustomer(model))
+            {
+                ViewBag.Error = "An account already exists for that email!";
+                return View(model);
+            }
+
+            //couldnt redirect to SignIn post
+
+            var newUser = new SignInViewModel() { Email = model.Email };
+            //return RedirectToAction("SignIn", new { model = newUser});
+
+            //signin
+            User user = null; //DbSignIn(newUser);
+
+            //if not found, show error message
+            if (user == null)
+            {
+                ViewBag.Error = "We do not recognize your email and/or password. Please try again or Register for an account.";
+                return RedirectToAction("SignIn");
+            }
+
+            //if found, save to session and redirect to UserHome
+            HttpContext.Session.SetString(SessionKeyName, user.Name);
+            HttpContext.Session.SetString(SessionKeyEmail, user.Email);
+
+            return RedirectToAction("UserHome");
+        }
+
     }
+
+    //Extension class to simplify storing objects in session state
+    public static class SessionExtensions
+    {
+        public static void Set<T>(this ISession session, string key, T value)
+        {
+            session.SetString(key, JsonConvert.SerializeObject(value));
+        }
+
+        public static T Get<T>(this ISession session, string key)
+        {
+            var value = session.GetString(key);
+            return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
+        }
+    }
+
 }
