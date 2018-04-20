@@ -11,6 +11,10 @@ namespace ChatBot.Client.Models
     {
         public static async Task<User> SignIn(string email)
         {
+            if(email == null || email == string.Empty)
+            {
+                return null;
+            }
             var client = new HttpClient();
             var url = "http://13.59.35.94/chatbotdata/api/data/" + email;
             var result = await client.GetAsync(new Uri(url));

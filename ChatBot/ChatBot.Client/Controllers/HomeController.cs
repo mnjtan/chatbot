@@ -17,11 +17,25 @@ namespace ChatBot.Client.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            //if signed in
+            if (HttpContext.Session.GetString(SessionKeyEmail) != null)
+            {
+                var name = HttpContext.Session.GetString(SessionKeyName);
+                ViewBag.LoggedIn = "true";
+                return RedirectToAction("Bot");
+            }
+            //redirects to sign in, or continue as guest
+            return RedirectToAction("SignIn");
         }
 
         public IActionResult About()
         {
+            //if signed in
+            if (HttpContext.Session.GetString(SessionKeyEmail) != null)
+            {
+                var name = HttpContext.Session.GetString(SessionKeyName);
+                ViewBag.LoggedIn = "true";
+            }
             ViewData["Message"] = "Your application description page.";
 
             return View();
@@ -42,11 +56,6 @@ namespace ChatBot.Client.Controllers
             }
 
             return View();
-        }
-
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
         [HttpGet]
@@ -99,8 +108,6 @@ namespace ChatBot.Client.Controllers
                 return View(model);
             }
 
-            //couldnt redirect to SignIn post
-
             var newUser = new SignInViewModel() { Email = model.Email };
             //return RedirectToAction("SignIn", new { model = newUser});
 
@@ -118,7 +125,7 @@ namespace ChatBot.Client.Controllers
             HttpContext.Session.SetString(SessionKeyName, user.Name);
             HttpContext.Session.SetString(SessionKeyEmail, user.Email);
 
-            return RedirectToAction("UserHome");
+            return RedirectToAction("Bot");
         }
 
     }
