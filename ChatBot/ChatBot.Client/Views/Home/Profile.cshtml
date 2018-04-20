@@ -1,4 +1,4 @@
-﻿@model PizzaStore.MVC.Models.Library.Customer
+﻿@model ChatBot.Client.Models.User
 
 @{
     ViewData["Title"] = "Profile";
@@ -23,10 +23,7 @@
                 </div>
             </div>
             <div>
-                <h5> <span>First Name: </span> @Model.FirstName</h5>
-            </div>
-            <div>
-                <h5> <span>Last Name: </span> @Model.LastName</h5>
+                <h5> <span>Name: </span> @Model.Name</h5>
             </div>
             <div>
                 <h5> <span>Email Address: </span> @Model.Email</h5>
@@ -34,9 +31,12 @@
             <div>
                 <h5> <span>Phone Number: </span> @Model.Phone</h5>
             </div>
+            <div>
+                <h5> <span>Favorite Team: </span> @Model.Team</h5>
+            </div>
         </div>
 
-        <div class="row">
+        @*<div class="row">
             <div class="page-header row">
                 <div class="col-md-9">
                     <h3>Address Information</h3>
@@ -67,21 +67,10 @@
                 }
             }
 
-        </div>
-
-        @*<div class="row">
-            <div class="page-header">
-                <h4>Credit Card Information</h4>
-            </div>
-            <div>
-                <h5> <span>First Name: </span> @Model.FirstName</h5>
-            </div>
-            <div>
-                <h5> <span>Last Name: </span> @Model.LastName</h5>
-            </div>
         </div>*@
 
-        <div class="row">
+
+        @*<div class="row">
             <div class="page-header">
                 <h3>Order History</h3>
             </div>
@@ -118,7 +107,7 @@
                 }
             }
 
-        </div>
+        </div>*@
 
     </div>
 
