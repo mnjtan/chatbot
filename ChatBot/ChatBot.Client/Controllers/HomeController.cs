@@ -102,17 +102,16 @@ namespace ChatBot.Client.Controllers
         public IActionResult Register(User model)
         {
             //try to register customer
-            if (false)//!DbRegisterCustomer(model))
+            var newUser = DataReader.RegisterUser(model).GetAwaiter().GetResult();
+
+            if (newUser == null)
             {
                 ViewBag.Error = "An account already exists for that email!";
                 return View(model);
             }
 
-            var newUser = new SignInViewModel() { Email = model.Email };
-            //return RedirectToAction("SignIn", new { model = newUser});
-
             //signin
-            User user = null; //DbSignIn(newUser);
+            User user = DataReader.SignIn(model.Email).GetAwaiter().GetResult();
 
             //if not found, show error message
             if (user == null)

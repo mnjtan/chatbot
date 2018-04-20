@@ -66,11 +66,5 @@ namespace ChatBotData.Service.Controllers
             return await Task.Run(() => new NoContentResult());
         }
 
-        // GET api/data/{id}
-        //[HttpGet("{id}", Name = "GetUser")]
-        //public async Task<User> GetUser(int id)
-        //{
-        //    return await Task.Run(() => dataReader.FindUserById(id));
-        //}
     }
 }
