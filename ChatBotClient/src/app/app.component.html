@@ -38,20 +38,14 @@
         <div *ngIf="state === 'login' ">
             <login (notifyState)=onNotify($event) (notifyLoggedIn)=onNotify($event)></login>
         </div>
-        <!-- <div *ngIf="state === 'bot' ">
-            <bot></bot>
-        </div> -->
+
+        <div *ngIf="state === 'register' ">
+            <h2>Register here</h2>
+        </div>
 
         <div id="botwindow" style='visibility: hidden'>
             <bot></bot>
         </div>
-        
-        <div *ngIf="state === 'register' ">
-            <h2>Register here</h2>
-        </div>
-        <!-- <ng-template #bot>
-            <bot></bot>
-        </ng-template> -->
 
         <br>
         <hr />
