@@ -13,3 +13,43 @@
 <body style="background-color:whitesmoke">
     <app-root></app-root>
 </body>
+<script src="https://cdn.botframework.com/botframework-webchat/latest/botchat.js"></script>
+
+<script src="https://cdn.botframework.com/botframework-webchat/latest/CognitiveServices.js"></script>
+
+<script>
+  const params = BotChat.queryParams(location.search);
+  const user = {
+    id: params['userid'] || 'user',
+    name: params['username'] || 'You'
+  };
+  const bot = {
+    id: params['botid'] || 'botid',
+    name: params['botname'] || 'botname'
+  };
+  window.botchatDebug = params['debug'] && params['debug'] === 'true';
+
+  const speechOptions = {
+    speechRecognizer: new CognitiveServices.SpeechRecognizer({ subscriptionKey: '03e13bfce7eb455d87b947781636da3d' }),
+    speechSynthesizer: new CognitiveServices.SpeechSynthesizer({
+      gender: CognitiveServices.SynthesisGender.Female,
+      subscriptionKey: '03e13bfce7eb455d87b947781636da3d',
+      voiceName: 'Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)'
+    })
+  };
+
+  BotChat.App({
+    bot: bot,
+    locale: params['locale'],
+    resize: 'detect',
+    speechOptions: speechOptions,
+    user: user,
+    directLine: {
+      domain: params['domain'],
+      secret: 'Du-iprbdQlI.cwA.zIk.8WfOTPt7FzPQ22kpULMWjxrBZvvOUep22GqMgTdb-fs',
+      token: params['t'],
+      webSocket: params['webSocket'] && params['webSocket'] === 'true' // defaults to true
+    }
+  }, document.getElementById('BotChatGoesHere'));
+</script>
+</html>

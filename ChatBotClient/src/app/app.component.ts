@@ -19,6 +19,14 @@ export class AppComponent {
   onNotify(message: any ):void {
     if(typeof message === 'string'){
       this.state = message;
+      var x = document.getElementById('botwindow');
+      if(message === 'bot') {
+        x.style.visibility = 'visible';
+      }
+      else
+      {
+        x.style.visibility = 'hidden';
+      }
     }
     else if(typeof message === 'boolean'){
       this.loggedIn = message;
