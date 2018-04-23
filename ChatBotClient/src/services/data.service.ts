@@ -12,11 +12,12 @@ export class DataService{
     }
 
     signIn(email: string){
-        return this.client.get("http://13.59.35.94/chatbotdata/api/data/"+ email)
+        return this.client.get("http://13.59.35.94/chatbotdata/api/data/"+ email);
     }
     
     registerUser(user: User){
-        this.client.get("").toPromise().then(this.pass,this.fail);
+        // this.client.get("").toPromise().then(this.pass,this.fail);
+        return this.client.post("http://13.59.35.94/chatbotdata/api/data",user);
     }
 
     pass(response: Object){

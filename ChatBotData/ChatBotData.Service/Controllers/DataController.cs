@@ -39,6 +39,10 @@ namespace ChatBotData.Service.Controllers
                 return await Task.Run(() => BadRequest());
             }
 
+            if(dataReader.FindUser(user.Email) != null){
+                return await Task.Run(() => BadRequest());
+            }
+
             dataReader.InsertUser(user);
 
             return CreatedAtRoute("GetUser", new { email = user.Email }, user);

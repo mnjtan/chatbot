@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
 import { User } from "./user";
 import { DataService } from "../services/data.service";
 
@@ -9,18 +9,15 @@ import { DataService } from "../services/data.service";
     styleUrls: ['./login.component.css']
 })
 export class LoginComponent{
-
     @Output() notifyState: EventEmitter<string> = new EventEmitter<string>();
     @Output() notifyLoggedIn: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    loggedIn: boolean;
     user: User;
     verifiedUser: User;
     dataClient: DataService;
     Error: string;
 
     constructor(dataClient: DataService){
-        this.loggedIn = false;
         this.user = new User();
         this.verifiedUser = new User();
         this.dataClient = dataClient;

@@ -10,11 +10,13 @@ import { LoginModule } from "../login/login.module";
 import { DataService } from '../services/data.service';
 import { HttpClientModule } from '@angular/common/http';
 import { BotComponent } from '../bot/bot.component';
+import { RegisterComponent } from '../register/register.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
+    RegisterComponent,
     BotComponent
   ],
   imports: [
