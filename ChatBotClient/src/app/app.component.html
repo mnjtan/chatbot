@@ -36,15 +36,15 @@
 <!-- Equivalent to @RenderBody from MVC -->
 <!-- Choose what to display, SignIn/Bot -->
         <div *ngIf="state === 'login' ">
-            <login (notifyState)=onNotify($event) (notifyLoggedIn)=onNotify($event)></login>
+            <login (notifyState)=onNotify($event) (notifyLoggedIn)=onNotify($event) (notifyName)=onNotifyName($event)></login>
         </div>
 
         <div *ngIf="state === 'register' ">
-            <register></register>
+            <register (notifyState)=onNotify($event)></register>
         </div>
 
         <div id="botwindow" style='visibility: hidden'>
-            <bot></bot>
+            <bot [name]="userName"></bot>
         </div>
 
         <br>

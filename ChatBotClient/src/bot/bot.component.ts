@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'bot',
@@ -6,5 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./bot.component.css']
 })
 export class BotComponent {
+  @Input() name:string;
+
   title = 'app';
+
 }

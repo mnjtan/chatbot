@@ -8,12 +8,14 @@ import { Component } from '@angular/core';
 export class AppComponent {
   state: string;
   loggedIn:boolean;
+  userName: string;
 
   title = 'app';
 
   constructor(){
     this.state = "login";
     this.loggedIn = false;
+    this.userName = "Guest";
   }
 
   onNotify(message: any ):void {
@@ -37,6 +39,12 @@ export class AppComponent {
     console.log(message);
   }
 
+  onNotifyName(message: string):void {
+    this.userName = message;
+    console.log(message);
+  }
+  
+
   goSignUp()
   {
     this.state = "register"
@@ -55,6 +63,7 @@ export class AppComponent {
   goSignOut(){
     this.state = "login"
     this.loggedIn = false;
+    this.userName =  "Guest";
     var x = document.getElementById('botwindow');
     x.style.visibility = 'hidden';
     document.getElementById("innerDiv").className = "col-md-offset-3 col-md-1";
