@@ -10,19 +10,24 @@ import { LoginModule } from "../login/login.module";
 import { DataService } from '../services/data.service';
 import { HttpClientModule } from '@angular/common/http';
 import { BotComponent } from '../bot/bot.component';
+import { BotModule } from "../bot/bot.module";
 import { RegisterComponent } from '../register/register.component';
+import { RegisterModule } from "../register/register.module";
 
 @NgModule({
   declarations: [
-    AppComponent,
-    LoginComponent,
-    RegisterComponent,
-    BotComponent
+    AppComponent
+    //LoginComponent,
+    //RegisterComponent
+    //BotComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    LoginModule,
+    BotModule,
+    RegisterModule
   ],
   providers: [
     DataService
